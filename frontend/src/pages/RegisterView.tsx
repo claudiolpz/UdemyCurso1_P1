@@ -1,13 +1,34 @@
-import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import { authRegister } from "../api/ApiRest";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
 import ErrorMessage from "../components/ErrorMessage";
-
-
+import type {RegisterForm} from '../types'
 const RegisterView = () => {
-  const { register, watch, handleSubmit, formState:{errors}} = useForm();
-  console.log(errors)
-  const handleRegister = () =>{
-    console.log("desde handleregister")
+
+  const initialvalues : RegisterForm = {
+    name:'',
+    email:'',
+    handle:'',
+    password:'',
+    password_confirmation:''
+  }
+  const { register, watch, handleSubmit, formState:{errors}} = useForm({defaultValues: initialvalues});
+  
+  const password = watch('password')
+
+   const handleRegister = async (formData: RegisterForm) => {
+    try {
+      const response = await authRegister(formData);
+      if (response.status === 201) {
+        toast.success('Usuario registrado exitosamente!')
+      }
+    } catch (error) {
+      if(isAxiosError(error) && error.response){
+        toast.error(error.response.data.error || 'Error al registrar usuario');
+      }      
+    }
   }
   return (
     <>
@@ -45,7 +66,11 @@ const RegisterView = () => {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="name@flowbite.com"
             {...register('email',{
-              required:"El correo es obligatorio"
+              required:"El E-mail es obligatorio",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "E-mail no válido",
+              },
             })}
           />
           {errors.email && <ErrorMessage>{String(errors.email.message)}</ErrorMessage>}
@@ -80,7 +105,11 @@ const RegisterView = () => {
             id="password"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             {...register('password',{
-              required:"La contraseña es obligatoria"
+              required:"La contraseña es obligatoria",
+              minLength:{
+                value:8,
+                message:"La constraseña debe tener minimo 8 caracteres"
+              }
             })}
           />
           {errors.password && <ErrorMessage>{String(errors.password.message)}</ErrorMessage>}
@@ -97,7 +126,8 @@ const RegisterView = () => {
             id="password_confirmation"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             {...register('password_confirmation',{
-              required:"La contraseña es obligatoria"
+              required:"La contraseña es obligatoria",
+              validate: (value) => value === password || 'Las contraseña no son iguales'
             })}
           />
           {errors.password_confirmation && <ErrorMessage>{String(errors.password_confirmation.message)}</ErrorMessage>}
