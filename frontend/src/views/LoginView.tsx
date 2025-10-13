@@ -16,7 +16,7 @@ export default function LoginView() {
     try {
       const response = await authLogin(formData);
       if (response.status === 200) {
-        toast.success(response.data)
+        toast.success(response.data.message);
       }
     } catch (error) {
       if (isAxiosError(error) && error.response) {

@@ -7,5 +7,6 @@ export async function authRegister(request: RegisterForm) {
 }
 export async function authLogin(request: LoginForm) {
     const response = await api.post(`/auth/login`, request);
+    localStorage.setItem('AUTH_TOKEN', response.data.token);
     return response;
 }

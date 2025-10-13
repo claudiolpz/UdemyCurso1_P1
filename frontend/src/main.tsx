@@ -3,10 +3,13 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import './index.css'
 import App from './App'
-import LoginView from './pages/LoginView'
+import LoginView from './views/LoginView'
 import Frontend from './components/Frontend'
-import RegisterView from './pages/RegisterView'
+import RegisterView from './views/RegisterView'
 import AuthLayout from './layouts/AuthLayout'
+import AppLayout from './layouts/AppLayout'
+import LinkTreeView from './views/LinkTreeView'
+import ProfileView from './views/ProfileView'
 
 const router = createBrowserRouter([
   {
@@ -29,7 +32,21 @@ const router = createBrowserRouter([
             element:<RegisterView/>
           }
         ]
-      }
+      },
+      {
+        path:'/admin',
+        element:<AppLayout/>,
+        children:[
+          {
+            path:'linktree',
+            element:<LinkTreeView/>
+          },
+          {
+            path:'profile',
+            element:<ProfileView/>
+          }
+        ]
+      },
     ],
   },
 ]);
