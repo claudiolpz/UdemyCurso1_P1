@@ -22,8 +22,8 @@ export default function AppLayout() {
                     </div>
                 </div>
             </header>
-            <div className="bg-gray-100  min-h-screen py-10">
-                <main className="mx-auto max-w-5xl p-10 md:p-0 ml-6">
+            <div className="bg-gray-100  min-h-screen py-10 ">
+                <main className="mx-auto max-w-5xl p-10 md:p-0 text-center">
                     <NavigationTabs />
                     
                     <div className="flex justify-end">

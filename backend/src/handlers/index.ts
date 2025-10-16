@@ -56,3 +56,8 @@ export const login = async (req: Request, res: Response) => {
 
     res.send(response)
 }
+
+export const getUser = async (req: Request, res: Response) => {
+    res.json(req.user);
+    
+}
