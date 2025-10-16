@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import { createAccount, login } from './handlers'
+import { createAccount, getUser, login } from './handlers'
 import { handleInputError } from './middleware/validations'
+import { autenticate } from './middleware/auth'
 
 const router = Router()
 
@@ -36,4 +37,8 @@ router.post('/auth/login',
     handleInputError,
     login,
 )
+
+router.get('/user', 
+    autenticate,
+    getUser)
 export default router
